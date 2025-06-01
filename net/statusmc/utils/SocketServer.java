@@ -41,6 +41,7 @@ public class SocketServer extends Thread {
       try {
          listenSock = new ServerSocket(port);
 
+         label117:
          while(true) {
             sock = listenSock.accept();
             in = new DataInputStream(sock.getInputStream());
@@ -52,59 +53,83 @@ public class SocketServer extends Thread {
                if (in.readByte() == 1) {
                   int random_code = (new SecureRandom()).nextInt();
                   int random_code_processed = Math.abs(random_code);
-                  Utils.log(Level.INFO, "Random code: " + random_code_processed);
+                  if (ServerConfig.developer_mode.equals(true)) {
+                     Utils.log(Level.INFO, "Random code: " + random_code_processed);
+                  }
+
                   out.writeInt(random_code_processed);
                   boolean success = Utils.readString(in, false).equals(Utils.hash(random_code_processed + ServerConfig.secretKey));
                   if (success) {
                      out.writeInt(1);
                      out.flush();
-                     Utils.log(Level.INFO, Utils.format(ServerConfig.successfulLogin));
+                     if (ServerConfig.disable_successful_connection_message.equals(false)) {
+                        Utils.log(Level.INFO, Utils.format(ServerConfig.successfulLogin));
+                     }
                   } else {
                      out.writeInt(0);
                      out.flush();
-                     Utils.log(Level.INFO, Utils.format(ServerConfig.wrongSecretKey));
+                     Utils.log(Level.ERROR, Utils.format(ServerConfig.wrongSecretKey));
                      this.connect_status = false;
                   }
                } else {
                   out.writeInt(0);
                   out.flush();
-                  Utils.log(Level.INFO, Utils.format(ServerConfig.unexpectederror));
+                  Utils.log(Level.ERROR, Utils.format(ServerConfig.unexpectederror));
                   this.connect_status = false;
                }
 
-               while(this.connect_status) {
-                  byte packetNumber = in.readByte();
-                  double maxMSPTValue;
-                  if (packetNumber == 2) {
-                     maxMSPTValue = (double)Math.round(SocketOnGetTPSEvent.getTPS() * 100.0D) / 100.0D;
-                     out.writeDouble(maxMSPTValue);
-                     if (ServerConfig.log_performance_metrics.equals(true)) {
-                        Utils.log(Level.INFO, "The current TPS is " + maxMSPTValue + ".");
+               while(true) {
+                  while(true) {
+                     while(true) {
+                        if (!this.connect_status) {
+                           continue label117;
+                        }
+
+                        byte packetNumber = in.readByte();
+                        double maxMSPTValue;
+                        if (packetNumber == 2) {
+                           maxMSPTValue = (double)Math.round(SocketOnGetTPSEvent.getTPS() * 100.0D) / 100.0D;
+                           out.writeDouble(maxMSPTValue);
+                           if (ServerConfig.log_performance_metrics.equals(true) && ServerConfig.log_only_low_tps.equals(true) && maxMSPTValue <= ServerConfig.low_tps_threshold) {
+                              Utils.log(Level.INFO, "The current TPS is " + maxMSPTValue + ".");
+                           } else if (ServerConfig.log_performance_metrics.equals(true) && ServerConfig.log_only_low_tps.equals(false)) {
+                              Utils.log(Level.INFO, "The current TPS is " + maxMSPTValue + ".");
+                           }
+                        } else if (packetNumber == 4) {
+                           maxMSPTValue = SocketOnGetMSPTEvent.getMinMSPT();
+                           out.writeDouble(maxMSPTValue);
+                           if (ServerConfig.log_performance_metrics.equals(true) && ServerConfig.log_only_high_min_mspt.equals(true) && maxMSPTValue >= ServerConfig.high_min_mspt_threshold) {
+                              Utils.log(Level.INFO, "Min MSPT for the last 1 minute: " + maxMSPTValue);
+                           } else if (ServerConfig.log_performance_metrics.equals(true) && ServerConfig.log_only_high_min_mspt.equals(false)) {
+                              Utils.log(Level.INFO, "Min MSPT for the last 1 minute: " + maxMSPTValue);
+                           }
+                        } else if (packetNumber == 5) {
+                           maxMSPTValue = SocketOnGetMSPTEvent.getAvgMSPT();
+                           out.writeDouble(maxMSPTValue);
+                           if (ServerConfig.log_performance_metrics.equals(true) && ServerConfig.log_only_high_avg_mspt.equals(true) && maxMSPTValue >= ServerConfig.high_avg_mspt_threshold) {
+                              Utils.log(Level.INFO, "Average MSPT for the last 1 minute: " + maxMSPTValue);
+                           } else if (ServerConfig.log_performance_metrics.equals(true) && ServerConfig.log_only_high_avg_mspt.equals(false)) {
+                              Utils.log(Level.INFO, "Average MSPT for the last 1 minute: " + maxMSPTValue);
+                           }
+                        } else if (packetNumber == 6) {
+                           maxMSPTValue = SocketOnGetMSPTEvent.getMaxMSPT();
+                           out.writeDouble(maxMSPTValue);
+                           if (ServerConfig.log_performance_metrics.equals(true) && ServerConfig.log_only_high_max_mspt.equals(true) && maxMSPTValue >= ServerConfig.high_max_mspt_threshold) {
+                              Utils.log(Level.INFO, "Max MSPT for the last 1 minute: " + maxMSPTValue);
+                           } else if (ServerConfig.log_performance_metrics.equals(true) && ServerConfig.log_only_high_max_mspt.equals(false)) {
+                              Utils.log(Level.INFO, "Max MSPT for the last 1 minute: " + maxMSPTValue);
+                           }
+                        } else if (packetNumber == 3) {
+                           if (ServerConfig.developer_mode.equals(true)) {
+                              Utils.log(Level.INFO, "Socket packet 3 close");
+                           }
+
+                           out.flush();
+                           this.closeConnectionGracefully();
+                        } else {
+                           Utils.log(Level.INFO, "Packet not found! Packet: " + packetNumber + " Please contact StatusMC Support staff.");
+                        }
                      }
-                  } else if (packetNumber == 4) {
-                     maxMSPTValue = SocketOnGetMSPTEvent.getMinMSPT();
-                     out.writeDouble(maxMSPTValue);
-                     if (ServerConfig.log_performance_metrics.equals(true)) {
-                        Utils.log(Level.INFO, "Min MSPT for the last 1 minute: " + maxMSPTValue);
-                     }
-                  } else if (packetNumber == 5) {
-                     maxMSPTValue = SocketOnGetMSPTEvent.getAvgMSPT();
-                     out.writeDouble(maxMSPTValue);
-                     if (ServerConfig.log_performance_metrics.equals(true)) {
-                        Utils.log(Level.INFO, "Average MSPT for the last 1 minute: " + maxMSPTValue);
-                     }
-                  } else if (packetNumber == 6) {
-                     maxMSPTValue = SocketOnGetMSPTEvent.getMaxMSPT();
-                     out.writeDouble(maxMSPTValue);
-                     if (ServerConfig.log_performance_metrics.equals(true)) {
-                        Utils.log(Level.INFO, "Max MSPT for the last 1 minute: " + maxMSPTValue);
-                     }
-                  } else if (packetNumber == 3) {
-                     Utils.log(Level.INFO, "Socket packet 3 close");
-                     out.flush();
-                     this.closeConnectionGracefully();
-                  } else {
-                     Utils.log(Level.INFO, "Packet not found! Packet: " + packetNumber + " Please contact StatusMC Support staff.");
                   }
                }
             } catch (IOException var5) {
@@ -116,8 +141,11 @@ public class SocketServer extends Thread {
             }
          }
       } catch (IOException var6) {
-         Utils.log(Level.INFO, "IO exception 2: " + var6.getMessage());
-         var6.printStackTrace();
+         if (ServerConfig.developer_mode.equals(true)) {
+            Utils.log(Level.INFO, "IO exception 2: " + var6.getMessage());
+            var6.printStackTrace();
+         }
+
       }
    }
 

@@ -1,6 +1,6 @@
 name: StatusMC
 main: net.statusmc.main.StatusMC
-version: 1.4.3-dev
+version: 1.0
 prefix: StatusMC
 api-version: '1.16'
 author: yyunusyigit, Seff300

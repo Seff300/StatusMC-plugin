@@ -1,7 +1,5 @@
 package net.statusmc.events;
 
-import com.destroystokyo.paper.event.server.ServerTickEndEvent;
-import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,27 +24,16 @@ public class SocketOnGetMSPTEvent implements Listener {
 
    @EventHandler
    public void onServerTickEnd(ServerTickEndEvent event) {
-      if (this.tickStartTime != 0L) {
-         long tickEndTime = System.nanoTime();
-         long timeDiff = tickEndTime - this.tickStartTime;
-         this.mspt = (double)timeDiff / 1000000.0D;
-         lock.writeLock().lock();
+      double mspt = event.getTickDuration();
+      lock.writeLock().lock();
 
-         try {
-            tickTimes.add(this.mspt);
-         } finally {
-            lock.writeLock().unlock();
+      try {
+         tickTimes.add(mspt);
+         if (tickTimes.size() > 1200) {
+            tickTimes.remove(0);
          }
-
-         lock.writeLock().lock();
-
-         try {
-            if (tickTimes.size() > 1200) {
-               tickTimes.remove(0);
-            }
-         } finally {
-            lock.writeLock().unlock();
-         }
+      } finally {
+         lock.writeLock().unlock();
       }
 
    }
@@ -92,20 +79,19 @@ public class SocketOnGetMSPTEvent implements Listener {
    public static double getMaxMSPT() {
       lock.readLock().lock();
 
-      double var5;
       try {
-         if (tickTimes.size() != 1200) {
-            Utils.log(Level.WARNING, Utils.format(ServerConfig.unableMaxMSPT));
-            return 0.0D;
+         if (tickTimes.size() == 1200) {
+            double max2 = (Double)Collections.max(tickTimes);
+            double maxMspt2 = (double)Math.round(max2 * 10.0D) / 10.0D;
+            double var5 = maxMspt2;
+            return var5;
          }
 
-         double max2 = (Double)Collections.max(tickTimes);
-         double maxMspt2 = (double)Math.round(max2 * 10.0D) / 10.0D;
-         var5 = maxMspt2;
+         Utils.log(Level.WARNING, Utils.format(ServerConfig.unableMaxMSPT));
       } finally {
          lock.readLock().unlock();
       }
 
-      return var5;
+      return 0.0D;
    }
 }

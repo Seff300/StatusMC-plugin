@@ -49,7 +49,10 @@ public class Utils {
       int stringSize = in.readInt();
       byte[] rawBytes = new byte[stringSize];
       in.readFully(rawBytes);
-      log(Level.INFO, new String(rawBytes, StandardCharsets.UTF_8));
+      if (ServerConfig.developer_mode.equals(true)) {
+         log(Level.INFO, new String(rawBytes, StandardCharsets.UTF_8));
+      }
+
       return new String(rawBytes, StandardCharsets.UTF_8);
    }
 
