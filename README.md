@@ -2,10 +2,10 @@
 
 Download the plugin here: https://statusmc.net/downloads
 
-**What is it?**
+**What is it?**<br>
 It is an all-in-one platform designed for Minecraft server administrators. It provides statuspages, incident management, Minecraft server TPS and MSPT monitoring (with historical data up to a month ago), helping server admins keep their players informed in an outage and ensure their servers are running smoothly, as well as get notified immediately when they aren't.
 
-**Key Features:**
+**Key Features:**<br>
 
 - Minecraft MSPT monitoring (including historical data up to a month ago)
 
@@ -31,7 +31,7 @@ It is an all-in-one platform designed for Minecraft server administrators. It pr
 
 - Custom CSS support
 
-**Set up**
+**Set up**<br>
 1. Create an account on our site
 2. Download the StatusMC plugin
 3. Create a statuspage on the StatusMC site (a statuspage gives you access to StatusMC's incident management and monitoring features)
@@ -41,7 +41,7 @@ It is an all-in-one platform designed for Minecraft server administrators. It pr
    
 A detailed guide can be found here: https://support.statusmc.net/en/blog/setting-up-minecraft-tps-mspt-monitoring
 
-**Additional information**
+**Additional information**<br>
 An account on StatusMC is required to use this plugin, this plugin simply provides a way for StatusMC to check your server's performance, all the management is done on StatusMC's website.
 
 You're also welcome to join our Discord: https://discord.gg/jP5qwMxXd9
