@@ -33,7 +33,7 @@ It is an all-in-one platform designed for Minecraft server administrators. It pr
 
 **Set up**<br>
 1. Create an account on our site
-2. Download the StatusMC plugin
+2. <a href="https://statusmc.net/downloads" target="_blank">Download the StatusMC plugin</a>
 3. Create a statuspage on the StatusMC site (a statuspage gives you access to StatusMC's incident management and monitoring features)
 4. Create a TPS/MSPT monitor on the StatusMC site
 5. Configure the config file on the plugin itself
@@ -42,6 +42,6 @@ It is an all-in-one platform designed for Minecraft server administrators. It pr
 A detailed guide can be found here: https://support.statusmc.net/en/blog/setting-up-minecraft-tps-mspt-monitoring
 
 **Additional information**<br>
-An account on StatusMC is required to use this plugin, this plugin simply provides a way for StatusMC to check your server's performance, all the management is done on StatusMC's website.
+An account on <a href="https://statusmc.net/" target="_blank">StatusMC</a> is required to use this plugin, this plugin simply provides a way for StatusMC to check your server's performance, all the management is done on StatusMC's website.
 
 You're also welcome to join our Discord: https://discord.gg/jP5qwMxXd9
