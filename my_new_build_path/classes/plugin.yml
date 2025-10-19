@@ -1,0 +1,5 @@
+main: net.statusmc.StatusMC
+version: 1.0
+name: StatusMC
+author: Seff300
+api-version: 1.17
