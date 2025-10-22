@@ -1,5 +1,11 @@
-main: net.statusmc.StatusMC
-version: 1.0
 name: StatusMC
-author: Seff300
-api-version: 1.17
+main: net.statusmc.main.StatusMC
+version: 1.0
+prefix: StatusMC
+api-version: '1.17'
+author: yyunusyigit, Seff300
+website: statusmc.net
+commands:
+  statusmc:
+     description: This command reloads the StatusMC Monitor plugin
+     usage: /<command>

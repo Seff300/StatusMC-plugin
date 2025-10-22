@@ -1,4 +1,10 @@
-c:\StatusMC plugin dev\StatusMC\src\main\java\net\statusmc\listeners\PlayerListener.java
-c:\StatusMC plugin dev\StatusMC\src\main\java\net\statusmc\managers\PluginManager.java
-c:\StatusMC plugin dev\StatusMC\src\main\java\net\statusmc\StatusMC.java
+c:\StatusMC plugin dev\StatusMC\src\main\java\net\statusmc\commands\ReloadCommand.java
+c:\StatusMC plugin dev\StatusMC\src\main\java\net\statusmc\events\ServerTickEndEvent.java
+c:\StatusMC plugin dev\StatusMC\src\main\java\net\statusmc\events\ServerTickStartEvent.java
+c:\StatusMC plugin dev\StatusMC\src\main\java\net\statusmc\events\SocketOnGetMSPTEvent.java
+c:\StatusMC plugin dev\StatusMC\src\main\java\net\statusmc\events\SocketOnGetTPSEvent.java
+c:\StatusMC plugin dev\StatusMC\src\main\java\net\statusmc\main\StatusMC.java
+c:\StatusMC plugin dev\StatusMC\src\main\java\net\statusmc\utils\APIRequest.java
+c:\StatusMC plugin dev\StatusMC\src\main\java\net\statusmc\utils\ServerConfig.java
+c:\StatusMC plugin dev\StatusMC\src\main\java\net\statusmc\utils\SocketServer.java
 c:\StatusMC plugin dev\StatusMC\src\main\java\net\statusmc\utils\Utils.java
